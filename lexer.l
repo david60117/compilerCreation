@@ -1,4 +1,5 @@
 %{
+#include <string.h>
 #include "parser.tab.h"
 int linea = 1;
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = linea;
@@ -21,9 +22,9 @@ SINO                              { return SINO; }
 VERDADERO                         { return VERDADERO; }
 FALSO                             { return FALSO; }
 
-["][^"\n]*["]                     { return CADENA; }
-[0-9]+([.][0-9]+)?                { return NUMERO; }
-[a-zA-Z_][a-zA-Z0-9_]*            { return VARIABLE; }
+["][^"\n]*["]                     { yylval.str = strdup(yytext); return CADENA; }
+[0-9]+([.][0-9]+)?                { yylval.str = strdup(yytext); return NUMERO; }
+[a-zA-Z_][a-zA-Z0-9_]*            { yylval.str = strdup(yytext); return VARIABLE; }
 
 "=="                              { return IGUAL; }
 "!="                              { return DIFERENTE; }
