@@ -1,10 +1,1 @@
-Analizando...
-Linea 1: declaracion correcta
-Linea 2: declaracion correcta
-Linea 3: declaracion correcta
-Linea 4: declaracion correcta
-Linea 5: asignacion correcta
-Linea 6: asignacion correcta
-Error sintactico en linea 7: syntax error
-Error sintactico en linea 9: syntax error
-Se encontraron 2 errores
+Se encontraron 0 errores

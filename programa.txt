@@ -1,9 +1,31 @@
-entero edad = 20;
-decimal precio = 9.99;
-caracter letra = 'a';
-booleano activo = verdadero;
-edad = edad + 5 * 2;
-activo = edad > 18;
-entero = 5;
-precio = precio / 2
-edad = edad - 1;
+ENTERO contador = 0
+ENTERO limite = 10
+ENTERO i
+FLOTANTE precio = 19.99
+FLOTANTE total
+CADENA mensaje = "Hola mundo"
+CARACTER letra = "a"
+LOGICO activo = VERDADERO
+
+total = precio * 2 + limite / 5 - 1
+
+SI letra == "a" || letra == "e"
+    ESCRIBIR "es vocal"
+SINO
+    ESCRIBIR "no es vocal"
+
+MIENTRAS contador < limite && activo != FALSO
+    contador = contador + 1
+    SI contador % 2 == 0
+        ESCRIBIR "par"
+    SINO
+        ESCRIBIR "impar"
+    SI contador > 7
+        activo = FALSO
+
+SI !activo
+    ESCRIBIR "ciclo terminado"
+
+PARA i = 0 i <= 5 i = i + 1
+    SI total >= 30 && mensaje != ""
+        ESCRIBIR mensaje

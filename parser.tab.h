@@ -54,35 +54,73 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    TIPO = 258,                    /* TIPO  */
-    VARIABLE = 259,                /* VARIABLE  */
-    ENTERO = 260,                  /* ENTERO  */
-    DECIMAL = 261,                 /* DECIMAL  */
-    CARACTER = 262,                /* CARACTER  */
-    BOOLEANO = 263,                /* BOOLEANO  */
-    SUMA = 264,                    /* SUMA  */
-    RESTA = 265,                   /* RESTA  */
-    MULT = 266,                    /* MULT  */
-    DIV = 267,                     /* DIV  */
-    IGUAL = 268,                   /* IGUAL  */
-    MENOR = 269,                   /* MENOR  */
-    MAYOR = 270,                   /* MAYOR  */
-    ASIGNACION = 271,              /* ASIGNACION  */
-    PUNTOYCOMA = 272               /* PUNTOYCOMA  */
+    TIPO_ENT = 258,                /* TIPO_ENT  */
+    TIPO_FLOT = 259,               /* TIPO_FLOT  */
+    TIPO_STRING = 260,             /* TIPO_STRING  */
+    TIPO_CARACTER = 261,           /* TIPO_CARACTER  */
+    TIPO_LOGICO = 262,             /* TIPO_LOGICO  */
+    WHILE = 263,                   /* WHILE  */
+    FOR = 264,                     /* FOR  */
+    PRINT = 265,                   /* PRINT  */
+    SI = 266,                      /* SI  */
+    SINO = 267,                    /* SINO  */
+    VERDADERO = 268,               /* VERDADERO  */
+    FALSO = 269,                   /* FALSO  */
+    CADENA = 270,                  /* CADENA  */
+    NUMERO = 271,                  /* NUMERO  */
+    VARIABLE = 272,                /* VARIABLE  */
+    ASIGNACION = 273,              /* ASIGNACION  */
+    NL = 274,                      /* NL  */
+    OR = 275,                      /* OR  */
+    AND = 276,                     /* AND  */
+    IGUAL = 277,                   /* IGUAL  */
+    DIFERENTE = 278,               /* DIFERENTE  */
+    MENOR = 279,                   /* MENOR  */
+    MAYOR = 280,                   /* MAYOR  */
+    MENOR_IGUAL = 281,             /* MENOR_IGUAL  */
+    MAYOR_IGUAL = 282,             /* MAYOR_IGUAL  */
+    SUMA = 283,                    /* SUMA  */
+    RESTA = 284,                   /* RESTA  */
+    MULT = 285,                    /* MULT  */
+    DIV = 286,                     /* DIV  */
+    MOD = 287,                     /* MOD  */
+    NOT = 288                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 9 "parser.y"
+ const char *msg; 
+
+#line 100 "parser.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+/* Location type.  */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE YYLTYPE;
+struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+};
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
 
 extern YYSTYPE yylval;
-
+extern YYLTYPE yylloc;
 
 int yyparse (void);
 

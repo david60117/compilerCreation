@@ -1,77 +1,80 @@
 %{
 #include <stdio.h>
-
 int yylex(void);
 void yyerror(const char *s);
-
-extern int yylineno;
 int errores = 0;
 %}
 
-%token TIPO VARIABLE
-%token ENTERO DECIMAL CARACTER BOOLEANO
-%token SUMA RESTA MULT DIV
-%token IGUAL MENOR MAYOR
-%token ASIGNACION PUNTOYCOMA
+%locations
+%union { const char *msg; }
 
-%left IGUAL
-%left MENOR MAYOR
+%token TIPO_ENT TIPO_FLOT TIPO_STRING TIPO_CARACTER TIPO_LOGICO
+%token WHILE FOR PRINT SI SINO VERDADERO FALSO
+%token CADENA NUMERO VARIABLE ASIGNACION NL
+
+%left OR
+%left AND
+%left IGUAL DIFERENTE
+%left MENOR MAYOR MENOR_IGUAL MAYOR_IGUAL
 %left SUMA RESTA
-%left MULT DIV
+%left MULT DIV MOD
+%right NOT
+
+%type <msg> sentencia
 
 %%
-
-programa
-        : programa sentencia
-        | sentencia
+programa: /* vacio */
+        | programa linea
         ;
 
-sentencia
-        : TIPO VARIABLE ASIGNACION expresion PUNTOYCOMA
-              { printf("Linea %d: declaracion correcta\n", yylineno); }
-        | VARIABLE ASIGNACION expresion PUNTOYCOMA
-              { printf("Linea %d: asignacion correcta\n", yylineno); }
-        | error PUNTOYCOMA
-              { yyerrok; }
-        ;
+linea: NL
+     | sentencia NL
+     | error NL         { yyerrok; }
+     ;
 
-expresion
-        : expresion SUMA expresion
-        | expresion RESTA expresion
-        | expresion MULT expresion
-        | expresion DIV expresion
-        | expresion IGUAL expresion
-        | expresion MENOR expresion
-        | expresion MAYOR expresion
-        | valor
-        ;
+sentencia: tipo VARIABLE                      { $$ = "declaracion correcta"; }
+         | tipo VARIABLE ASIGNACION expr      { $$ = "declaracion correcta"; }
+         | VARIABLE ASIGNACION expr           { $$ = "asignacion correcta"; }
+         | SI expr                            { $$ = "condicion SI correcta"; }
+         | SINO                               { $$ = "SINO correcto"; }
+         | WHILE expr                         { $$ = "ciclo MIENTRAS correcto"; }
+         | FOR VARIABLE ASIGNACION expr expr VARIABLE ASIGNACION expr
+                                              { $$ = "ciclo PARA correcto"; }
+         | PRINT expr                         { $$ = "escritura correcta"; }
+         ;
 
-valor
-        : ENTERO
-        | DECIMAL
-        | CARACTER
-        | BOOLEANO
-        | VARIABLE
-        ;
+tipo: TIPO_ENT | TIPO_FLOT | TIPO_STRING | TIPO_CARACTER | TIPO_LOGICO ;
 
+expr: expr OR expr
+    | expr AND expr
+    | expr IGUAL expr
+    | expr DIFERENTE expr
+    | expr MENOR expr
+    | expr MAYOR expr
+    | expr MENOR_IGUAL expr
+    | expr MAYOR_IGUAL expr
+    | expr SUMA expr
+    | expr RESTA expr
+    | expr MULT expr
+    | expr DIV expr
+    | expr MOD expr
+    | NOT expr
+    | '(' expr ')'
+    | NUMERO
+    | CADENA
+    | VARIABLE
+    | VERDADERO
+    | FALSO
+    ;
 %%
 
-void yyerror(const char *s)
-{
+void yyerror(const char *s) {
     errores++;
-    printf("Error sintactico en linea %d: %s\n", yylineno, s);
+    printf("Error sintactico linea %d\n", yylloc.first_line);
 }
 
-int main(void)
-{
-    printf("Analizando...\n");
-
+int main(void) {
     yyparse();
-
-    if (errores == 0)
-        printf("Sintaxis correcta\n");
-    else
-        printf("Se encontraron %d errores\n", errores);
-
+    printf("Se encontraron %d errores\n", errores);
     return 0;
 }

@@ -1,38 +1,51 @@
 %{
-#include <stdio.h>
 #include "parser.tab.h"
+int linea = 1;
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = linea;
 %}
-
 %option noyywrap
-%option yylineno
 
 %%
+ENTERO                            { return TIPO_ENT; }
+FLOTANTE                          { return TIPO_FLOT; }
+CADENA                            { return TIPO_STRING; }
+CARACTER                          { return TIPO_CARACTER; }
+LOGICO                            { return TIPO_LOGICO; }
+MIENTRAS                          { return WHILE; }
+PARA                              { return FOR; }
+ESCRIBIR                          { return PRINT; }
 
-"entero"            { return TIPO; }
-"decimal"           { return TIPO; }
-"caracter"          { return TIPO; }
-"booleano"          { return TIPO; }
+SI                                { return SI; }
+SINO                              { return SINO; }
 
-"verdadero"         { return BOOLEANO; }
-"falso"             { return BOOLEANO; }
+VERDADERO                         { return VERDADERO; }
+FALSO                             { return FALSO; }
 
-[0-9]+"."[0-9]+     { return DECIMAL; }
-[0-9]+              { return ENTERO; }
-'.'                 { return CARACTER; }
+["][^"\n]*["]                     { return CADENA; }
+[0-9]+([.][0-9]+)?                { return NUMERO; }
+[a-zA-Z_][a-zA-Z0-9_]*            { return VARIABLE; }
 
-[a-z]+              { return VARIABLE; }
+"=="                              { return IGUAL; }
+"!="                              { return DIFERENTE; }
+"<="                              { return MENOR_IGUAL; }
+">="                              { return MAYOR_IGUAL; }
+"<"                               { return MENOR; }
+">"                               { return MAYOR; }
 
-"+"                 { return SUMA; }
-"-"                 { return RESTA; }
-"*"                 { return MULT; }
-"/"                 { return DIV; }
-"=="                { return IGUAL; }
-"="                 { return ASIGNACION; }
-"<"                 { return MENOR; }
-">"                 { return MAYOR; }
-";"                 { return PUNTOYCOMA; }
+"&&"                              { return AND; }
+"||"                              { return OR; }
+"!"                               { return NOT; }
 
-[ \t\r\n]           { }
-.                   { printf("Error lexico en linea %d: '%s' no se reconoce\n", yylineno, yytext); }
+"="                               { return ASIGNACION; }
 
+"+"                               { return SUMA; }
+"-"                               { return RESTA; }
+"*"                               { return MULT; }
+"/"                               { return DIV; }
+"%"                               { return MOD; }
+
+\n                                { linea++; return NL; }
+[ \t\r]+                          { }
+.                                 { return yytext[0]; }
+<<EOF>>                           { static int fin = 0; if (!fin) { fin = 1; return NL; } return 0; }
 %%
